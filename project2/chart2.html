@@ -1,0 +1,154 @@
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Homeless Person Assistance 2010-2019</title>
+		<script type="text/javascript" src="d3.js"></script>
+		<style type="text/css">
+           body{background-color:#332A3D;}
+		rect:hover {
+			fill: orange;
+		}
+		
+		#tooltip {
+			position: absolute;
+			width: 300px;
+			height: auto;
+			padding: 10px;
+			background-color: #D3536D;
+			-webkit-border-radius: 10px;
+			-moz-border-radius: 10px;
+			border-radius: 10px;
+			-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+			-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+			box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+			pointer-events: none;
+			right: 50vw;
+			top:10vh;
+			text-align:center;
+		}
+		
+		#tooltip.hidden {
+			display: none;
+		}
+		
+		#tooltip p {
+			margin: 0;
+			color:#fff;
+			font-size: 16px;
+			line-height: 20px;
+		}
+		#head {
+			color:f2f0ee;
+			font-family:garamond;
+			font-size: 24px;
+			line-height: 30px;
+		}
+		
+		#para{color:#f2f0ee;
+			font-family:garamond;}
+			
+		</style>
+	</head>
+	<div id="tooltip" class="hidden">
+		<p><strong>Number of Reports (By the Thousand)</strong></p>
+		<p><span id="value">100</span></p>
+	</div>
+   <header id="head"><h2> Number of Homeless People Reported to DHS by Borough, 2010-2019</h2></header>
+	<body>
+		<p id="para">Hover over to learn more</p>
+		<script type="text/javascript">
+            
+                var w = 500
+                var h = 500
+                padding = 20
+                
+				// i looked at the console log to get the total values of each borough
+				
+				var dataset = [79,30,37,6, 21]
+			var boro = ["Manhattan","Bronx","Brooklyn","Staten Island", "Queens"]
+			
+			
+var xScale = d3.scaleBand()
+							.domain(d3.range(dataset.length))
+							.rangeRound([0, w])
+							.paddingInner(0.05)
+
+var yScale = d3.scaleLinear()
+							.domain([0, d3.max(dataset)])
+							.range([0, h]);
+					 
+			var xAxis = d3.axisBottom()
+							  .scale(xScale)
+							  .ticks(5)
+					 
+			var yAxis = d3.axisLeft()
+							  .scale(yScale)
+							  .ticks(5)
+			
+               
+	var svg = d3.select("body")
+				.append("svg")
+				.attr("width", w)
+				.attr("height", h);
+
+	svg.selectAll("rect")
+	   .data(dataset)
+	   .enter()
+	   .append("rect")
+ 			   .attr("x", function(d, i) {
+ 			   		return xScale(i);
+ 			   })
+ 			   .attr("y", function(d) {
+ 			   		return h - yScale(d);
+ 			   })
+ 			   .attr("width", xScale.bandwidth())
+ 			   .attr("height", function(d) {
+ 			   		return yScale(d);
+ 			   })
+	   .attr("fill","#A1A7AF")
+		   	   .on("mouseover", function(d) {
+
+	
+		   					//Update the tooltip position and value
+		   					d3.select("#tooltip")
+		   						.select("#value")
+		   						.text(d)
+			   
+		   					//Show the tooltip
+		   					d3.select("#tooltip").classed("hidden", false);
+
+		   			   })
+		   			   .on("mouseout", function() {
+			   
+		   					//Hide the tooltip
+		   					d3.select("#tooltip").classed("hidden", true);
+					
+		   			   })
+	   
+	
+	
+	
+			svg.selectAll("text")
+			   .data(boro)
+			   .enter()
+			   .append("text")
+			   .text(function(d) {
+			   		return d;
+			   })
+			   .attr("text-anchor", "middle")
+			   .attr("x", function(d, i) {
+			   		return xScale(i) + xScale.bandwidth() / 2;
+			   })
+			   .attr("y", 485)
+	   .attr("font-family", "garamond")
+	   .attr("font-size", "11px")
+	   .attr("fill", "#f2f0ee")
+			   
+   	 
+	
+
+
+			   
+		</script>
+	</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Homeless People Reported to DHS 2010-2019</title>
+		<script type="text/javascript" src="d3.js"></script>
+		<style type="text/css">
+			body{background-color:#f2f0ee;}
+            body{font-family:garamond;}
+            #button1{border-radius:10px;padding:10px;width:100px;background-color:#332A3D;color:#fff;cursor:pointer;}
+			
+			rect:hover {
+				fill: orange;
+			}
+			
+			#tooltip {
+				position: absolute;
+				width: 200px;
+				height: auto;
+				padding: 10px;
+				background-color: #332A3D;
+				-webkit-border-radius: 10px;
+				-moz-border-radius: 10px;
+				border-radius: 10px;
+				-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+				-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+				box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+				pointer-events: none;
+				bottom:30vh;
+				text-align:center;
+			}
+			
+			#tooltip.hidden {
+				display: none;
+			}
+			
+			#tooltip p {
+				margin: 0;
+				color:#fff;
+				font-size: 16px;
+				line-height: 20px;
+			}
+			#head {
+				color:#332A3D;
+				font-family:garamond;
+				font-size: 24px;
+				line-height: 30px;
+			}
+			#para{color:#332A3D;
+				font-family:garamond;}
+			
+		</style>
+	</head>
+    <a href='chart2.html' id = "button1">Next</a>
+    <div id="chart1"></div>
+	<div id="tooltip" class="hidden">
+		<p><strong>Date Reported & Result</strong></p>
+		<p><span id="value">100</span></p>
+	</div>
+	<header id="head"> 
+	<h2>Location of Homeless People Reported to DHS, 2010-2019</h2>
+	</header>
+	<body>
+	<p id="para">Hover over to learn more</p>
+		<script type="text/javascript">
+		
+           
+				
+				var w = 800;
+				var h = 600;
+				
+var projection = 
+  			  		d3.geoMercator()
+  					.center([-73.94, 40.70])
+  					.scale(60000)
+  					.translate([(w) / 2, (h)/2]);
+				
+					   
+	var path = d3.geoPath()
+					 .projection(projection);
+				
+	var svg = d3.select("body")
+				.append("svg")
+				.attr("width", w)
+				.attr("height", h);
+				
+				d3.json("Borough.geojson", function(geojson) {
+				
+					svg.selectAll("path")
+					   .data(geojson.features)
+					   .enter()
+					   .append("path")
+					   .attr("d", path)
+					   .style("opacity","0.5")
+					   .style("stroke","white")
+					   .style("fill", "D3536D");
+		
+				});
+				
+	d3.csv("311.csv", function(data){
+		
+	svg.selectAll("circle")
+	   .data(data)
+	   .enter()
+	   .append("circle")
+	   .attr("cx", function(d) {
+		   return projection([d.Longitude, d.Latitude])[0];
+	   })
+	   .attr("cy", function(d) {
+		   return projection([d.Longitude, d.Latitude])[1];
+	   })
+	.attr("r","0.5")
+	.style("fill","332A3D")
+	.style("opacity","0.25")
+	.on("mouseover", function(d) {
+
+		
+
+					//Update the tooltip position and value
+					d3.select("#tooltip")
+										
+						.select("#value")
+						.text(d.Date + " " + d.Res)
+			   
+					//Show the tooltip
+					d3.select("#tooltip").classed("hidden", false);
+
+			   })
+			   .on("mouseout", function() {
+			   
+					//Hide the tooltip
+					d3.select("#tooltip").classed("hidden", true);
+					
+			   })
+	      
+	
+	})
+	
+	
+   
+	
+	            
+				
+			
+            
+            
+           
+		</script>
+	</body>
+</html>
