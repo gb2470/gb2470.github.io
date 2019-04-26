@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Status of H1-B Applications,2017</title>
+		<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+		<script
+		  src="https://code.jquery.com/jquery-3.4.0.js"
+		  integrity="sha256-DYZMCC8HTC+QDr5QNaIcfR7VSPtcISykd+6eSmBW5qo="
+		  crossorigin="anonymous"></script>
+		
+		<style>
+			
+			
+		.arc text {
+		  font: 10px sans-serif;
+		  text-anchor: middle;
+		}
+
+		.arc path {
+		  stroke: #fff;
+		}
+
+		.toolTip {
+		    position: absolute;
+		    display: none;
+		    width: auto;
+		    height: auto;
+		    background: none repeat scroll 0 0 white;
+		    border: 0 none;
+		    border-radius: 8px 8px 8px 8px;
+		    box-shadow: -3px 3px 15px #888888;
+		    color: black;
+		    font: 12px sans-serif;
+		    padding: 5px;
+		    text-align: center;
+		}
+		button {
+		  background-color: #4CAF50; /* Green */
+		  border: none;
+		  color: white;
+		  padding: 15px 32px;
+		  text-align: center;
+		  text-decoration: none;
+		  display: inline-block;
+		  font-size: 16px;
+		  margin: 4px 2px;
+		  cursor: pointer;
+		}
+		</style>
+		<body>
+			<h1>Status of H1-B Applications,2017</h1>
+			<p>Source: United States Department of Labor</p>
+			<br>
+			<h4>Click on Pie Chart for information about Applications with Dependents </h4>
+			
+			
+			
+		    <span class='firstpie'></span>
+		    <span class='secondpie'></span>
+	<script type="text/javascript">
+		
+		
+		let total = 545694 + 8480 + 20772 + 49704
+
+		console.log(`Certified : ${100 * 545694 / total}% Denied: ${100 * 8480 / total }`)
+
+		console.log(`Withdrawm : ${20772 * 100 / total}% Cert-With : ${49704 * 100 / total} `)
+
+		let div = d3.select("body").append("div").attr("class", "toolTip");
+		let dataset = [
+			{ name: 'Certified', total: 545694, percent: 87.36 },
+			{ name: 'Denied', total: 8480, percent: 1.36 },
+			{ name: 'Withdrawn', total: 20772, percent: 3.33 },
+			{ name: 'Certified-Withdrawn', total: 49704, percent: 7.95 }
+		];
+
+		let width = 560,
+		    height = 500,
+		    radius = Math.min(width, height) / 2;
+
+		let color = d3.scale.ordinal()
+		    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56"]);
+
+		let arc = d3.svg.arc()
+		    .outerRadius(radius - 10)
+		    .innerRadius(0);
+
+		let pie = d3.layout.pie()
+		    .sort(null)
+			 .startAngle(1.1*Math.PI)
+		    .endAngle(3.1*Math.PI)
+		    .value(function(d) { return d.total; });
+
+		let svg = d3.select("span.firstpie").append("svg")
+		    .attr("width", width)
+		    .attr("height", height)
+		  .append("g")
+		    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+
+		 let g = svg.selectAll(".arc")
+		      .data(pie(dataset))
+		    .enter().append("g")
+		      .attr("class", "arc");
+
+		  g.append("path")
+		    .style("fill", function(d) { return color(d.data.name); })
+		    .attr('class', function(d) { return d.data.name; })
+		    .transition().delay(function(d,i) {
+			return i * 500; }).duration(500)
+			.attrTween('d', function(d) {
+				let i = d3.interpolate(d.startAngle+0.1, d.endAngle);
+				return function(t) {
+					d.endAngle = i(t); 
+					return arc(d)
+					}
+				}); 
+		  g.append("text")
+		      .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+		      .attr("dy", ".35em")
+		      .attr('class', 'tooltip')
+			  .transition()
+			  .delay(1000)
+		      .text(function(d) { return d.data.name; });
+
+			d3.selectAll("path").on("mousemove", function(d) {
+			    div.style("left", d3.event.pageX+10+"px");
+				  div.style("top", d3.event.pageY-25+"px");
+				  div.style("display", "inline-block");
+		    div.html((d.data.name)+"<br>"+(d.data.total) + "<br>"+(d.data.percent) + "%");
+		});
+	  
+		d3.selectAll("path").on("mouseout", function(d){
+		    div.style("display", "none");
+		});
+	  
+	  
+		//d3.select("body").transition().style("background-color", "#d3d3d3");
+		function type(d) {
+		  d.total = +d.total;
+		  return d;
+		}
+
+		$(document).ready(function() {
+    
+    
+		    $('.Certified').click(function() {
+
+		        $('span.secondpie').text('')
+		        $('.toolTip').remove()
+		        console.log('yes')
+
+
+
+		        let div = d3.select("body").append("div").attr("class", "toolTip");
+		let dataset = [
+			{ name: 'With Dependent', total: 208935, percent: 100 },
+			{ name: 'Without Dependent', total: 336759, percent: 0 }
+		];
+
+		let width = 560,
+		    height = 500,
+		    radius = Math.min(width, height) / 2;
+
+		let color = d3.scale.ordinal()
+		    .range(["steelblue", "lightgrey"]);
+
+		let arc = d3.svg.arc()
+		    .outerRadius(radius - 10)
+		    .innerRadius(0);
+
+		let pie = d3.layout.pie()
+		    .sort(null)
+			 .startAngle(1.1*Math.PI)
+		    .endAngle(3.1*Math.PI)
+		    .value(function(d) { return d.total; });
+
+		let svg = d3.select("span.secondpie").append("svg")
+		    .attr("width", width)
+		    .attr("height", height)
+		  .append("g")
+		    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+
+		 let g = svg.selectAll(".arc")
+		      .data(pie(dataset))
+		    .enter().append("g")
+		      .attr("class", "arc");
+
+		  g.append("path")
+		    .style("fill", function(d) { return color(d.data.name); })
+		    .attr('class', function(d) { return d.data.name; })
+		    .transition().delay(function(d,i) {
+			return i * 500; }).duration(500)
+			.attrTween('d', function(d) {
+				let i = d3.interpolate(d.startAngle+0.1, d.endAngle);
+				return function(t) {
+					d.endAngle = i(t); 
+					return arc(d)
+					}
+				}); 
+		  g.append("text")
+		      .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+		      .attr("dy", ".35em")
+			  .transition()
+			  .delay(1000)
+		      .text(function(d) { return d.data.name; });
+
+			d3.selectAll("path").on("mousemove", function(d) {
+			    div.style("left", d3.event.pageX+10+"px");
+				  div.style("top", d3.event.pageY-25+"px");
+				  div.style("display", "inline-block");
+		    div.html((d.data.name)+"<br>"+(d.data.total) + "<br>"+(d.data.percent) + "%");
+		});
+	  
+		d3.selectAll("path").on("mouseout", function(d){
+		    div.style("display", "none");
+		});
+	  
+	  
+		//d3.select("body").transition().style("background-color", "#d3d3d3");
+		function type(d) {
+		  d.total = +d.total;
+		  return d;
+		}
+
+
+
+		    })
+
+		    $('.Denied').click(function() {
+
+		        $('.toolTip').remove()
+
+		console.log('yes')
+
+		$('span.secondpie').text('')
+
+
+
+		let div = d3.select("body").append("div").attr("class", "toolTip");
+		let dataset = [
+		{ name: 'With Dependent', total: 1361, percent: 100 },
+		{ name: 'Without Dependent', total: 7119, percent: 0 }
+		];
+
+		let width = 560,
+		height = 500,
+		radius = Math.min(width, height) / 2;
+
+		let color = d3.scale.ordinal()
+		    .range(["steelblue", "lightgrey"]);
+		let arc = d3.svg.arc()
+		.outerRadius(radius - 10)
+		.innerRadius(0);
+
+		let pie = d3.layout.pie()
+		.sort(null)
+		.startAngle(1.1*Math.PI)
+		.endAngle(3.1*Math.PI)
+		.value(function(d) { return d.total; });
+
+		let svg = d3.select("span.secondpie").append("svg")
+		.attr("width", width)
+		.attr("height", height)
+		.append("g")
+		.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+
+		let g = svg.selectAll(".arc")
+		.data(pie(dataset))
+		.enter().append("g")
+		.attr("class", "arc");
+
+		g.append("path")
+		.style("fill", function(d) { return color(d.data.name); })
+		.attr('class', function(d) { return d.data.name; })
+		.transition().delay(function(d,i) {
+		return i * 500; }).duration(500)
+		.attrTween('d', function(d) {
+		let i = d3.interpolate(d.startAngle+0.1, d.endAngle);
+		return function(t) {
+		    d.endAngle = i(t); 
+		    return arc(d)
+		    }
+		}); 
+		g.append("text")
+		.attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+		.attr("dy", ".35em")
+		.transition()
+		.delay(1000)
+		.text(function(d) { return d.data.name; });
+
+		d3.selectAll("path").on("mousemove", function(d) {
+		div.style("left", d3.event.pageX+10+"px");
+		  div.style("top", d3.event.pageY-25+"px");
+		  div.style("display", "inline-block");
+		div.html((d.data.name)+"<br>"+(d.data.total) + "<br>"+(d.data.percent) + "%");
+		});
+
+		d3.selectAll("path").on("mouseout", function(d){
+		div.style("display", "none");
+		});
+
+
+		//d3.select("body").transition().style("background-color", "#d3d3d3");
+		function type(d) {
+		d.total = +d.total;
+		return d;
+		}
+
+
+
+		})
+
+		$('.Certified-Withdrawn').click(function() {
+
+		    $('.toolTip').remove()
+
+		console.log('yes')
+
+		$('span.secondpie').text('')
+
+
+
+		let div = d3.select("body").append("div").attr("class", "toolTip");
+		let dataset = [
+		{ name: 'With Dependent', total: 17352, percent: 100 },
+		{ name: 'Without Dependent', total: 32352, percent: 0 }
+		];
+
+		let width = 560,
+		height = 500,
+		radius = Math.min(width, height) / 2;
+
+		let color = d3.scale.ordinal()
+		    .range(["steelblue", "lightgrey"]);
+		let arc = d3.svg.arc()
+		.outerRadius(radius - 10)
+		.innerRadius(0);
+
+		let pie = d3.layout.pie()
+		.sort(null)
+		.startAngle(1.1*Math.PI)
+		.endAngle(3.1*Math.PI)
+		.value(function(d) { return d.total; });
+
+		let svg = d3.select("span.secondpie").append("svg")
+		.attr("width", width)
+		.attr("height", height)
+		.append("g")
+		.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+
+		let g = svg.selectAll(".arc")
+		.data(pie(dataset))
+		.enter().append("g")
+		.attr("class", "arc");
+
+		g.append("path")
+		.style("fill", function(d) { return color(d.data.name); })
+		.attr('class', function(d) { return d.data.name; })
+		.transition().delay(function(d,i) {
+		return i * 500; }).duration(500)
+		.attrTween('d', function(d) {
+		let i = d3.interpolate(d.startAngle+0.1, d.endAngle);
+		return function(t) {
+		    d.endAngle = i(t); 
+		    return arc(d)
+		    }
+		}); 
+		g.append("text")
+		.attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+		.attr("dy", ".35em")
+		.transition()
+		.delay(1000)
+		.text(function(d) { return d.data.name; });
+
+		d3.selectAll("path").on("mousemove", function(d) {
+		div.style("left", d3.event.pageX+10+"px");
+		  div.style("top", d3.event.pageY-25+"px");
+		  div.style("display", "inline-block");
+		div.html((d.data.name)+"<br>"+(d.data.total) + "<br>"+(d.data.percent) + "%");
+		});
+
+		d3.selectAll("path").on("mouseout", function(d){
+		div.style("display", "none");
+		});
+
+
+		//d3.select("body").transition().style("background-color", "#d3d3d3");
+		function type(d) {
+		d.total = +d.total;
+		return d;
+		}
+
+
+
+		})
+
+
+		$('.Withdrawn').click(function() {
+
+		    $('.toolTip').remove()
+
+		console.log('yes')
+
+		$('span.secondpie').text('')
+
+
+
+		let div = d3.select("body").append("div").attr("class", "toolTip");
+		let dataset = [
+		{ name: 'With Dependent', total: 6209, percent: 100 },
+		{ name: 'Without Dependent', total: 14563, percent: 0 }
+		];
+
+		let width = 560,
+		height = 500,
+		radius = Math.min(width, height) / 2;
+		let color = d3.scale.ordinal()
+		    .range(["steelblue", "lightgrey"]);
+		let arc = d3.svg.arc()
+		.outerRadius(radius - 10)
+		.innerRadius(0);
+
+		let pie = d3.layout.pie()
+		.sort(null)
+		.startAngle(1.1*Math.PI)
+		.endAngle(3.1*Math.PI)
+		.value(function(d) { return d.total; });
+
+		let svg = d3.select("span.secondpie").append("svg")
+		.attr("width", width)
+		.attr("height", height)
+		.append("g")
+		.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+
+		let g = svg.selectAll(".arc")
+		.data(pie(dataset))
+		.enter().append("g")
+		.attr("class", "arc");
+
+		g.append("path")
+		.style("fill", function(d) { return color(d.data.name); })
+		.attr('class', function(d) { return d.data.name; })
+		.transition().delay(function(d,i) {
+		return i * 500; }).duration(500)
+		.attrTween('d', function(d) {
+		let i = d3.interpolate(d.startAngle+0.1, d.endAngle);
+		return function(t) {
+		    d.endAngle = i(t); 
+		    return arc(d)
+		    }
+		}); 
+		g.append("text")
+		.attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+		.attr("dy", ".35em")
+		.transition()
+		.delay(1000)
+		.text(function(d) { return d.data.name; });
+
+		d3.selectAll("path").on("mousemove", function(d) {
+		div.style("left", d3.event.pageX+10+"px");
+		  div.style("top", d3.event.pageY-25+"px");
+		  div.style("display", "inline-block");
+		div.html((d.data.name)+"<br>"+(d.data.total) + "<br>"+(d.data.percent) + "%");
+		});
+
+		d3.selectAll("path").on("mouseout", function(d){
+		div.style("display", "none");
+		});
+
+
+		//d3.select("body").transition().style("background-color", "#d3d3d3");
+		function type(d) {
+		d.total = +d.total;
+		return d;
+		}
+
+
+
+		})
+    
+    
+    
+    
+    
+		})
+
+			
+			   
+			   	   
+		</script>
+		<a href='wmap_final.html'><button class='button'>Next Chart</button></a>
+	</body>
+</html>

@@ -1,0 +1,85 @@
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Percentage of H1-B Applicants in Jobs Related to Architecture, 2017</title>
+		
+		<script type="text/javascript" src="d3.js"></script>
+		<style type="text/css">
+		button {
+		  background-color: #4CAF50; /* Green */
+		  border: none;
+		  color: white;
+		  padding: 15px 32px;
+		  text-align: centerm;
+		  text-decoration: none;
+		  display: inline-block;
+		  font-size: 16px;
+		  margin: 4px 2px;
+		  cursor: pointer;
+		}			
+		</style>
+	</head>
+	<body>
+		<h1>Percentage of H1-B Applicants in Jobs Related to Architecture</h1>
+		<p>Source: United States Department of Labor</p>
+		<br>
+		
+		<h3>ORANGE: ARCHITECT, GREEN: DRAFTSMEN, BLUE: ARCHITECTURE TEACHER </h3>
+		<script type="text/javascript">
+
+			//Width and height
+			var w = 700;
+			var h = 700;
+		   
+			var dataset = [131,1329,1032]
+			  
+			  
+			 
+			
+			
+			var outerRadius = w / 2;
+			var innerRadius = 0;
+			var arc = d3.arc()
+						.innerRadius(innerRadius)
+						.outerRadius(outerRadius);
+			
+			var pie = d3.pie();
+			
+			//Easy colors accessible via a 10-step ordinal scale
+			var color = d3.scaleOrdinal(d3.schemeCategory10);
+
+			//Create SVG element
+			var svg = d3.select("body")
+						.append("svg")
+						.attr("width", w)
+						.attr("height", h);
+			
+			//Set up groups
+			var arcs = svg.selectAll("g.arc")
+						  .data(pie(dataset))
+						  .enter()
+						  .append("g")
+						  .attr("class", "arc")
+						  .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
+			
+			//Draw arc paths
+			arcs.append("path")
+			    .attr("fill", function(d, i) {
+			    	return color(i);
+			    })
+			    .attr("d", arc);
+			
+			//Labels
+			arcs.append("text")
+			    .attr("transform", function(d) {
+			    	return "translate(" + arc.centroid(d) + ")";
+			    })
+			    .attr("text-anchor", "middle")
+			    .text(function(d) {
+			    	return d.value;
+			    });
+			
+		</script>
+				<a href='overview_fin.html'><button class='button'>Back to the Start</button></a>
+	</body>
+</html>

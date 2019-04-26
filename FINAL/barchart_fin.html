@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Most Common Job Types of H1-B Applicants,2017</title>
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+		<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+		
+		
+		  <style>
+    
+		    .axis {
+			  font: 10px sans-serif;
+			}
+
+		  div.tooltip {	
+		    position: absolute;			
+		    text-align: center;			
+		    width: auto;					
+		    height: 28px;					
+		    padding: 5px;				
+		    font: 12px sans-serif;		
+		    background: lightsteelblue;	
+		    border: 0px;		
+		    border-radius: 8px;			
+		    pointer-events: none;			
+		    color: brown;
+
+		}
+
+			.axis path,
+			.axis line {
+			  fill: none;
+			  stroke: #000;
+			  shape-rendering: crispEdges;
+			}
+
+
+		  body > svg > g > g.x.axis  text {
+    
+		  -ms-transform: rotate(-75deg); /* IE 9 */
+		  -webkit-transform: rotate(-75deg); /* Safari */
+		  transform: rotate(-75deg);
+		}
+
+		svg {
+		  padding: 0
+		}
+  
+		button {
+		  background-color: #4CAF50; /* Green */
+		  border: none;
+		  color: white;
+		  padding: 15px 32px;
+		  text-align: center;
+		  text-decoration: none;
+		  display: inline-block;
+		  font-size: 16px;
+		  margin: 4px 2px;
+		  cursor: pointer;
+		}
+  
+		  </style>
+
+		</head>
+		<body>
+		  <div id='layout'>
+	  		<h1>Most Common Job Types of H1-B Applicants,2017</h1>
+	  		<p>Source: United States Department of Labor</p>
+			<br>
+	  		<h4>Hover over Bar Chart for Number of Applicants by Job Type </h4>
+		   
+		    <div id='container'>
+		      <svg > </svg>
+		    </div>
+		  </div>
+	<script type="text/javascript">
+		
+	
+    
+
+	    const data = [
+	      {
+	        language: 'COMPUTER SCIENCE',
+	        value: 38.7024,
+	        color: '#000000'
+	      },
+	      {
+	        language: 'SOFTWARE DEVELOPER',
+	        value: 11.0513,
+	        color: '#00a2ee'
+	      },
+	      {
+	        language: 'CONSULTANT ',
+	        value: 13.092,
+	        color: '#fbcb39'
+	      },
+	      {
+	        language: 'ACCOUNTANT ',
+	        value: 11.889,
+	        color: '#007bc8'
+	      },
+	      {
+	        language: 'MECHANICAL ENGINEER',
+	        value: 9.886,
+	        color: '#65cedb'
+	      },
+	      {
+	        language: 'FINANCIAL ANALYST',
+	        value: 9.633,
+	        color: '#ff6e52'
+	      },
+	      {
+	        language: 'OPERATIONS RESEARCH ',
+	        value:9.550,
+	        color: '#f9de3f'
+	      },
+	      {
+	        language: 'DATABASE ADMIN',
+	        value: 7.789,
+	        color: '#5d2f8e'
+	      },
+	      {
+	        language: ' MARKETING',
+	        value: 7.707,
+	        color: '#008fc9'
+	      },
+	      {
+	        language: 'ELECTRONICS ENGINEER',
+	        value: 6.472,
+	        color: '#507dca'
+	      },
+	      {
+	        language: 'ELECTRICAL ENGINEER',
+	        value: 6.289,
+	        color: '#507dca'
+	      },
+	      {
+	        language: 'DOCTOR',
+	        value: 5.855,
+	        color: '#507dca'
+	      },
+	      {
+	        language: 'STATISTICIAN',
+	        value: 5.196,
+	        color: '#507dca'
+	      },
+	      {
+	        language: 'WEB DEVELOPER',
+	        value: 5.027,
+	        color: '#507dca'
+	      },
+	      {
+	        language: 'MEDICAL SCIENTIST',
+	        value: 3.503,
+	        color: '#507dca'
+	      },
+	      {
+	        language: 'INDUSTRIAL ENGINEER',
+	        value: 3.475,
+	        color: '#507dca'
+	      },
+	      {
+	        language: 'BIOLOGIST',
+	        value: 3.440,
+	        color: '#507dca'
+	      },
+	      {
+	        language: 'CIVIL ENGINEER',
+	        value: 3.418,
+	        color: '#507dca'
+	      },
+	      {
+        
+	        language: 'BIOCHEMIST',
+	        value: 3.256,
+	        color: '#507dca'
+	      }
+	    ];
+
+
+    
+	var margin = {top: 20, right: 20, bottom: 70, left: 40},
+	    width = 900, 
+	    height = 600
+
+
+
+	var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
+
+	var y = d3.scale.linear().range([height, 0]);
+
+	var xAxis = d3.svg.axis()
+	    .scale(x)
+	    .orient("bottom")
+
+
+	var yAxis = d3.svg.axis()
+	    .scale(y)
+	    .orient("left")
+	    .ticks(5);
+		
+
+	    var div = d3.select("body").append("div")	
+	    .attr("class", "tooltip")				
+	    .style("opacity", 0);
+
+	var svg = d3.select("body").append("svg")
+	    .attr("width", width + margin.left + margin.right)
+	    .attr("height", height + margin.top + margin.bottom)
+	  .append("g")
+	    .attr("transform", 
+	          "translate(" + margin.left + "," + margin.top + ")");
+
+	
+	  x.domain(data.map(function(d) { return d.language; }));
+	  y.domain([0, d3.max(data, function(d) { return d.value; })]);
+
+	  svg.append("g")
+	      .attr("class", "x axis")
+	      .attr("transform", "translate(0," + height + ")")
+	      .call(xAxis)
+	    .selectAll("text")
+	      .style("text-anchor", "end")
+	  .attr("font-size","6px")
+	      .attr("dx", 0)
+	      .attr("dy", 0)
+	      .attr("transform", "rotate(-90)" );
+
+	  svg.append("g")
+	      .attr("class", "y axis")
+	      .call(yAxis)
+	    .append("text")
+	      .attr("transform", "rotate(-90)")
+	      .attr("y", 100)
+	      .attr("dy", ".71em")
+	      .style("text-anchor", "end")
+	     
+		  
+		  d3.select("svg").append('text')
+		  .attr('transform', 'rotate(-90)')
+		  .attr("font-size","14px")
+		  .attr('y', 0 )
+		  .attr('x', -80 )
+		  .attr('dy', '1em')
+		  .style('text-anchor', 'middle')
+		  .text('Applicants(x1000)')
+		  
+		  d3.select("svg").append('text')
+		  .attr('transform', 'translate(' + (width/2) + ' ,' + (height + margin.top + 40) + ')')
+		  .style('text-anchor', 'middle')
+		  .text('Number of H1-B Applications Filed')
+      
+
+	  svg.selectAll("bar")
+	      .data(data)
+	    .enter().append("rect")
+	      .style("fill", "steelblue")
+	      .attr("x", function(d) { return x(d.language); })
+	      .attr("width", x.rangeBand())
+	      .attr("y", function(d) { return y(d.value); })
+	      .attr("height", function(d) { return height - y(d.value); })
+	      .on("mouseover", function(d) {		
+	            div.transition()		
+	                .duration(200)		
+	                .style("opacity", .9);		
+	            div	.html(`${Math.trunc(d.value * 1000)} <br>${d.language} Applicants`)	
+	                .style("left", (d3.event.pageX) + "px")		
+	                .style("top", (d3.event.pageY - 28) + "px");	
+	            })					
+	        .on("mouseout", function(d) {		
+	            div.transition()		
+	                .duration(500)		
+	                .style("opacity", 0);	
+
+	        })
+  
+	  </script>
+			<a href='archii.html'><button class='button'>Next Chart</button></a>
+	</body>
+</html>

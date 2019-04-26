@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Number of H1-B Applications Compared with Company Size, 2017</title>
+		
+		<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+		
+		
+		  <style>
+    
+	  		button {
+	  		  background-color: #4CAF50; /* Green */
+	  		  border: none;
+	  		  color: white;
+	  		  padding: 15px 32px;
+	  		  text-align: center;
+	  		  text-decoration: none;
+	  		  display: inline-block;
+	  		  font-size: 16px;
+	  		  margin: 4px 2px;
+	  		  cursor: pointer;
+	  		}		
+			
+			  .main text {
+			  font: 10px sans-serif;	
+			  }
+
+			  .axis line, .axis path {
+			  shape-rendering: crispEdges;
+			  stroke: black;
+			  fill: none;
+			  }
+
+			  circle {
+			  fill: red;
+			  }
+  
+		  </style>
+
+		</head>
+		<body>
+		   <div class='content'>
+		   </div>
+		   
+	  		<h1>Number of H1-B Applications Compared with Company Size, 2017</h1>
+	  		<p>Source: United States Department of Labor</p>
+			<br>
+	  		<h4>Hover over Circles for Name of Company </h4>
+		  
+		    
+	<script type="text/javascript">
+		
+	
+        const data = [
+            {
+              company: 'INFOSYS LIMITED',
+              size:  225,
+              num: 20587
+            },
+            {
+              company: 'TATA CONSULTANCY SERVICES LIMITED',
+              size: 424,
+              num: 13529
+            },
+            {
+              company: 'CAPGEMINI AMERICA INC',
+              size:  200,
+              num: 9604
+            },
+            {
+              company: 'IBM INDIA PRIVATE LIMITED',
+              size: 350,
+              num: 8734
+            },
+            {
+              company: 'COMPUTEOTECH MAHINDRA (AMERICAS),INC.CCUPATIONS',
+              size:  113,
+              num: 7543
+            },
+            {
+              company: 'DELOITTE CONSULTING LLP',
+              size: 286,
+              num: 7179
+            },
+            {
+              company: 'ACCENTURE LLP',
+              size:  248,
+              num: 6690
+            },
+            {
+              company: 'ERNST & YOUNG U.S. LLP',
+              size: 270,
+              num:6096
+            },
+            {
+              company: 'WIPRO LIMITED',
+              size: 160,
+              num: 5177
+            },
+            {
+              company: 'GOOGLE INC.',
+              size:  98,
+              num: 5074
+            },
+            {
+              company: 'MICROSOFT CORPORATION',
+              size: 134,
+              num: 5005
+            },
+            {
+              company: 'HCL AMERICA, INC.',
+              size: 117,
+              num: 4263
+            },
+            {
+              company: 'SYNTEL CONSULTING INC.',
+              size:  18,
+              num: 4187
+            },
+            {
+              company: 'AMAZON CORPORATE LLC',
+              size: 566,
+              num: 4165
+            },
+            {
+              company: 'COGNIZANT TECHNOLOGY SOLUTIONS U.S. CORPORATION',
+              size: 281,
+              num:2707
+            },
+            {
+              company: 'IBM CORPORATION',
+              size:  350,
+              num: 2546
+            },
+            {
+              company: 'LARSEN & TOUBRO INFOTECH LIMITED',
+              size:  42,
+              num: 1921
+            },
+            {
+              company: 'L&T TECHNOLOGY SERVICES LIMITED',
+              size:  43,
+              num: 1842
+            },
+            {
+              company: 'JPMORGAN CHASE & CO.',
+              size:  256,
+              num: 1822
+            }
+          ];
+      
+      
+      
+      
+      
+      
+      
+      
+        var div = d3.select("body").append("div")	
+        .attr("class", "tooltip")				
+        .style("opacity", 0);
+         
+            var margin = {top: 20, right: 15, bottom: 60, left: 60}
+              , width = 960 - margin.left - margin.right
+              , height = 500 - margin.top - margin.bottom;
+          
+      
+              var x = d3.scale.linear().range([0, width], .05);
+      
+              var y = d3.scale.linear().range([height, 0]);
+      
+              x.domain([0, d3.max(data, function(d) { return d.num; })]);
+              y.domain([0, d3.max(data, function(d) { return d.size; })]);
+       
+            var chart = d3.select('body')
+          .append('svg:svg')
+          .attr('width', width + margin.right + margin.left)
+          .attr('height', height + margin.top + margin.bottom)
+          .attr('class', 'chart')
+      
+            var main = chart.append('g')
+          .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+          .attr('width', width)
+          .attr('height', height)
+          .attr('class', 'main')   
+              
+            // draw the x axis
+            var xAxis = d3.svg.axis()
+          .scale(x)
+            .orient('bottom')
+            .ticks(15);
+      
+            main.append('g')
+          .attr('transform', 'translate(0,' + height + ')')
+          .attr('class', 'main axis date')
+          .call(xAxis);
+      
+	  //label axis
+		  
+	//Create labels
+	
+	 //  .text("Number of H1-B Applications Filed")
+		  
+	
+	  
+            // draw the y axis
+            var yAxis = d3.svg.axis()
+          .scale(y)
+            .orient('left')
+            .ticks(15);
+      
+            main.append('g')
+          .attr('transform', 'translate(0,0)')
+          .attr('class', 'main axis')
+          .call(yAxis);
+		  
+		  d3.select("svg").append('text')
+		  .attr('transform', 'rotate(-90)')
+		  .attr('y', 0 )
+		  .attr('x', 0 -(height/2))
+		  .attr('dy', '1em')
+		  .style('text-anchor', 'middle')
+		  .text('Size of Company (By Number of Employees x1000)')
+		  
+		  d3.select("svg").append('text')
+		  .attr('transform', 'translate(' + (width/2) + ' ,' + (height + margin.top + 40) + ')')
+		  .style('text-anchor', 'middle')
+		  .text('Number of H1-B Applications Filed')
+      
+            var g = main.append("svg:g"); 
+          
+            g.selectAll("scatter-dots")
+              .data(data)
+              .enter().append("svg:circle")
+                  .attr("cx", function (d) { return x(d.num); } )
+                  .attr("cy", function (d) { return y(d.size); } )
+                  .attr("r", 8)
+      
+            d3.selectAll('circle') .on("mouseover", function(d) {		
+                div.transition()		
+                    .duration(200)		
+                    .style("opacity", .9);		
+                div	.html(d.company)	
+                    .style("left", (d3.event.pageX) + "px")		
+                    .style("top", (d3.event.pageY - 28) + "px");	
+                })					
+            .on("mouseout", function(d) {		
+                div.transition()		
+                    .duration(500)		
+                    .style("opacity", 0);	
+            }); 
+			
+			 </script>
+			 <a href='barchart_fin.html'><button class='button'>Next Chart</button></a>
+	</body>
+</html>
